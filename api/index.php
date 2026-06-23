@@ -3,6 +3,9 @@ use Illuminate\Http\Request;
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
+putenv('APP_DEBUG=true');
+$_ENV['APP_DEBUG'] = 'true';
+$_SERVER['APP_DEBUG'] = 'true';
 
 define('LARAVEL_START', microtime(true));
 
