@@ -55,4 +55,6 @@ try {
     echo "<pre>" . htmlspecialchars((string) $e) . "</pre>";
 }
 
-ob_end_flush();
+if (ob_get_level() > 0) {
+    ob_end_flush();
+}
