@@ -41,9 +41,13 @@ class AdminLayananController extends Controller
             'gambar.mimes'       => 'Format gambar harus jpeg, png, atau jpg!',
         ]);
 
-        // Fitur Wajib 6: Proses Upload Gambar ke public/assets/images/
+        // Fitur Wajib 6: Proses Upload Gambar ke public/img/
         $namaGambar = time() . '.' . $request->gambar->extension();
-        $request->gambar->move(public_path('assets/images'), $namaGambar);
+        try {
+            $request->gambar->move(public_path('img'), $namaGambar);
+        } catch (\Exception $e) {
+            // Ignore if on Vercel (read-only)
+        }
 
         // Simpan ke Database
         Layanan::create([
@@ -53,7 +57,7 @@ class AdminLayananController extends Controller
             'gambar'    => $namaGambar,
         ]);
 
-        return redirect()->route('admin.layanan.index')->with('success', 'Data Layanan baru berhasil ditambahkan!');
+        return redirect()->route('admin.layanan.index')->with('success', 'Data Layanan baru berhasil ditambahkan! (Catatan: Upload gambar di Vercel tidak tersimpan permanen)');
     }
 
     // 4. Menampilkan Form Edit Data Berdasarkan ID
@@ -78,16 +82,21 @@ class AdminLayananController extends Controller
 
         // Cek jika admin mengupload gambar baru
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama dari folder public/assets/images agar tidak penuh
-            $pathLama = public_path('assets/images/' . $layanan->gambar);
+            // Hapus gambar lama dari folder public/img agar tidak penuh
+            $pathLama = public_path('img/' . $layanan->gambar);
             if (File::exists($pathLama)) {
-                File::delete($pathLama);
+                try { File::delete($pathLama); } catch (\Exception $e) {}
             }
 
             // Upload gambar baru
             $namaGambar = time() . '.' . $request->gambar->extension();
-            $request->gambar->move(public_path('assets/images'), $namaGambar);
-            $layanan->gambar = $namaGambar;
+            try {
+                $request->gambar->move(public_path('img'), $namaGambar);
+                $layanan->gambar = $namaGambar;
+            } catch (\Exception $e) {
+                // Ignore if on Vercel
+                $layanan->gambar = $namaGambar; // It will be broken, but won't crash
+            }
         }
 
         // Update data text
@@ -96,7 +105,7 @@ class AdminLayananController extends Controller
         $layanan->kategori  = $request->kategori;
         $layanan->save();
 
-        return redirect()->route('admin.layanan.index')->with('success', 'Data Layanan berhasil diperbarui!');
+        return redirect()->route('admin.layanan.index')->with('success', 'Data Layanan berhasil diperbarui! (Catatan: Upload gambar di Vercel tidak tersimpan permanen)');
     }
 
     // 6. Memproses Penghapusan Data (Delete)
@@ -105,9 +114,9 @@ class AdminLayananController extends Controller
         $layanan = Layanan::findOrFail($id);
 
         // Hapus file fisik gambar dari folder public
-        $pathGambar = public_path('assets/images/' . $layanan->gambar);
+        $pathGambar = public_path('img/' . $layanan->gambar);
         if (File::exists($pathGambar)) {
-            File::delete($pathGambar);
+            try { File::delete($pathGambar); } catch (\Exception $e) {}
         }
 
         // Hapus baris data di database
