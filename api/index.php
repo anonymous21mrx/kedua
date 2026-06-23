@@ -15,16 +15,28 @@ require __DIR__.'/../vendor/autoload.php';
 // Bootstrap Laravel and handle the request...
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-// Vercel serverless environment is read-only. We must change the storage path to /tmp
+// Vercel serverless environment is read-only. We must change all cache/storage paths to /tmp
 $storagePath = '/tmp/storage';
 $app->useStoragePath($storagePath);
 
+// Override cache paths for read-only filesystem
+putenv("APP_CONFIG_CACHE={$storagePath}/framework/cache/config.php");
+putenv("APP_EVENTS_CACHE={$storagePath}/framework/cache/events.php");
+putenv("APP_ROUTES_CACHE={$storagePath}/framework/cache/routes.php");
+putenv("VIEW_COMPILED_PATH={$storagePath}/framework/views");
+$_ENV['APP_CONFIG_CACHE'] = "{$storagePath}/framework/cache/config.php";
+$_ENV['APP_EVENTS_CACHE'] = "{$storagePath}/framework/cache/events.php";
+$_ENV['APP_ROUTES_CACHE'] = "{$storagePath}/framework/cache/routes.php";
+$_ENV['VIEW_COMPILED_PATH'] = "{$storagePath}/framework/views";
+
 // Ensure required directories exist in /tmp
 $dirs = [
+    "$storagePath/app",
     "$storagePath/framework/views",
     "$storagePath/framework/cache/data",
     "$storagePath/framework/sessions",
     "$storagePath/logs",
+    "$storagePath/bootstrap/cache",
 ];
 foreach ($dirs as $dir) {
     if (!is_dir($dir)) {
@@ -32,4 +44,9 @@ foreach ($dirs as $dir) {
     }
 }
 
+// Optional: catch any output buffer that Vercel might be swallowing
+ob_start();
+
 $app->handleRequest(Request::capture());
+
+ob_end_flush();
