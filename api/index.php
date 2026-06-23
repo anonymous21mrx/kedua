@@ -47,6 +47,11 @@ foreach ($dirs as $dir) {
 // Optional: catch any output buffer that Vercel might be swallowing
 ob_start();
 
-$app->handleRequest(Request::capture());
+try {
+    $app->handleRequest(Request::capture());
+} catch (\Throwable $e) {
+    echo "<h1>CRITICAL PHP ERROR</h1>";
+    echo "<pre>" . htmlspecialchars((string) $e) . "</pre>";
+}
 
 ob_end_flush();
