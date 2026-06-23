@@ -1,0 +1,10 @@
+{
+  "name": "project-tugas",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Skipping Node build for PHP project'"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
