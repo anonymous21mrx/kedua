@@ -162,7 +162,7 @@
             @if($layanan->gambar)
                 <div style="margin-top: 12px;">
                     <small class="text-muted d-block fw-bold mb-1">Gambar Saat Ini:</small>
-                    <img src="{{ asset('assets/images/' . $layanan->gambar) }}" class="img-preview" alt="Preview">
+                    <img src="{{ asset('img/' . $layanan->gambar) }}" class="img-preview" alt="Preview">
                 </div>
             @endif
             @error('gambar')

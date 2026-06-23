@@ -17,7 +17,7 @@
         <div class="col-md-4 mb-4 text-center">
             <div class="card border-0 h-100 shadow-sm mx-1" style="border-radius: 15px;">
                 <div class="p-4">
-                    <img src="{{ asset('assets/images/' . $pilar->gambar) }}" class="img-fluid mb-3" style="max-height: 80px;" alt="{{ $pilar->nama_item }}">
+                    <img src="{{ asset('img/' . $pilar->gambar) }}" class="img-fluid mb-3" style="max-height: 80px;" alt="{{ $pilar->nama_item }}">
                     <h5 class="fw-bold text-danger">{{ $pilar->nama_item }}</h5>
                     <p class="small text-muted">{{ Str::limit($pilar->deskripsi, 50) }}</p>
                     <a href="{{ route('projects.show', $pilar->id) }}" class="btn btn-outline-danger btn-sm mt-2">Lihat Detail</a>
@@ -73,7 +73,7 @@
                     {{ $promo->nama_item }}
                 </div>
                 
-                <img src="{{ asset('assets/images/' . $promo->gambar) }}" class="card-img-top" alt="Promo" style="height: 250px; object-fit: contain; background: #fff;">
+                <img src="{{ asset('img/' . $promo->gambar) }}" class="card-img-top" alt="Promo" style="height: 250px; object-fit: contain; background: #fff;">
                 
                 <div class="card-body text-center">
                     <h5 class="fw-bold text-danger">{{ $promo->nama_item }}</h5>

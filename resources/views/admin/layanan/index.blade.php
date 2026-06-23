@@ -33,7 +33,7 @@
                         <td class="text-center fw-bold text-secondary">{{ $key + 1 }}</td>
                         <td>
                             @if($layanan->gambar)
-                                <img src="{{ asset('assets/images/' . $layanan->gambar) }}" alt="Gambar" class="img-thumbnail" style="width: 80px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                <img src="{{ asset('img/' . $layanan->gambar) }}" alt="Gambar" class="img-thumbnail" style="width: 80px; height: 60px; object-fit: cover; border-radius: 8px;">
                             @else
                                 <span class="badge bg-secondary">No Image</span>
                             @endif
