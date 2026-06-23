@@ -27,6 +27,9 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 $storagePath = '/tmp/storage';
 $app->useStoragePath($storagePath);
 
+$bootstrapPath = '/tmp/bootstrap';
+$app->useBootstrapPath($bootstrapPath);
+
 // Ensure required directories exist in /tmp
 $dirs = [
     "$storagePath/app",
@@ -34,7 +37,7 @@ $dirs = [
     "$storagePath/framework/cache/data",
     "$storagePath/framework/sessions",
     "$storagePath/logs",
-    "$storagePath/bootstrap/cache",
+    "$bootstrapPath/cache",
 ];
 foreach ($dirs as $dir) {
     if (!is_dir($dir)) {
