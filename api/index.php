@@ -10,6 +10,20 @@ require __DIR__.'/../vendor/autoload.php';
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
 // Vercel serverless environment is read-only. We must change the storage path to /tmp
-$app->useStoragePath('/tmp/storage');
+$storagePath = '/tmp/storage';
+$app->useStoragePath($storagePath);
+
+// Ensure required directories exist in /tmp
+$dirs = [
+    "$storagePath/framework/views",
+    "$storagePath/framework/cache/data",
+    "$storagePath/framework/sessions",
+    "$storagePath/logs",
+];
+foreach ($dirs as $dir) {
+    if (!is_dir($dir)) {
+        mkdir($dir, 0777, true);
+    }
+}
 
 $app->handleRequest(Request::capture());
