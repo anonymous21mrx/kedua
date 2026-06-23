@@ -7,6 +7,17 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
 
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/setup-db', function() {
+    try {
+        Artisan::call('migrate:fresh', ['--force' => true, '--seed' => true]);
+        return "Database berhasil di-migrate dan di-seed! Silakan buka halaman utama.";
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
 Route::get('/', [TokoController::class, 'index'])->name('home');
 Route::get('/projects', [TokoController::class, 'projects'])->name('projects');
 Route::get('/projects/{id}', [TokoController::class, 'showProject'])->name('projects.show');
